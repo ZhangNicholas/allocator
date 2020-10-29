@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <gtest/gtest.h>
 
-#include "ipfilter.hpp"
+#include "myAllocator.hpp"
 
 TEST(Iplist, Empty) {
     // Arrange

@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 3.2)
 
-# enable MSVC_RUNTIME_LIBRARY property
-#cmake_policy(SET CMP0091 NEW)
-
 if($ENV{TRAVIS_BUILD_NUMBER})
-    project(ipfilter VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
+    project(myAllocator VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
 else()
-   project(ipfilter VERSION 0.0.1)
+   project(myAllocator VERSION 0.0.1)
 endif()
 
 set(CMAKE_CXX_STANDARD 14)
@@ -16,32 +13,32 @@ find_package(GTest REQUIRED)
 
 # Main target
 add_executable(
-    ipfilter
+    myAllocator
     src/main.cpp
-    src/ipfilter.hpp
+    src/myAllocator.hpp
 )
 
 # Test target
 add_executable(
-    test_ipfilter
-    test/test_ipfilter.cpp
+    test_myAllocator
+    test/test_myAllocator.cpp
  )
 
-set_target_properties(ipfilter test_ipfilter PROPERTIES
+set_target_properties(myAllocator test_myAllocator PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
 
 # Add googletest, src to the include directories for the test target
 target_include_directories(
-    test_ipfilter
+    test_myAllocator
     PRIVATE ${GTEST_INCLUDE_DIRS}
     PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
 # Link test target against gtest libraries
 target_link_libraries(
-    test_ipfilter PRIVATE
+    test_myAllocator PRIVATE
     ${GTEST_BOTH_LIBRARIES}
 )
 
@@ -53,25 +50,25 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
     target_compile_options(
-        ipfilter PRIVATE
+        myAllocator PRIVATE
         /W4
     )
     target_compile_options(
-        test_ipfilter PRIVATE
+        test_myAllocator PRIVATE
         /W4
     )
 else ()
     target_compile_options(
-        ipfilter PRIVATE
+        myAllocator PRIVATE
         -Wall -Wextra -pedantic #-Werror
     )
     target_compile_options(
-        test_ipfilter PRIVATE
+        test_myAllocator PRIVATE
         -Wall -Wextra -pedantic #-Werror
     )
 endif()
 
-install(TARGETS ipfilter RUNTIME DESTINATION bin)
+install(TARGETS myAllocator RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
@@ -85,4 +82,4 @@ include(CPack)
 
 enable_testing()
 
-add_test(test_ipfilter test_ipfilter) 
+add_test(test_myAllocator test_myAllocator) 
