@@ -16,6 +16,7 @@ before_script:
 - echo "deb http://archive.ubuntu.com/ubuntu xenial main universe" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
 script:
+- cd $TRAVIS_BUILD_DIR
 - cmake .
 - cmake --build .
 - cmake --build . --target test
