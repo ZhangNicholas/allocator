@@ -7,33 +7,45 @@
 
 #include <vector>
 #include <map>
-#include"myAllocator.hpp"
+#include "allocatorTraits.hpp"
+//#include "loggingAllocator.hpp"
+
+unsigned int factorial(unsigned int n)
+{
+	if (n == 0)
+		return 1;
+	return n * factorial(n - 1);
+}
 
 int main(int argc, char const* argv[])
 {
-	auto v = std::vector<int, logging_allocator<int>>{};
-	v.reserve(6);
-	for (int i = 0; i < 6; ++i) {
-		std::cout << "vector size = " << v.size() << std::endl;
-		v.emplace_back(i);
-		std::cout << std::endl;
-	}
-
-	// std::cout << "\n\n\n\nAfter creation\n\n\n\n" << std::endl;
-	// auto v2 = v;
-
-	auto m = std::map<
+	auto container_size = 10;
+	std::map<int, int> m;
+	auto m_custom_allocator = std::map<
 		int,
-		float,
+		int,
 		std::less<int>,
 		logging_allocator<
 		std::pair<
-		const int, float
+		const int, int
 		>
 		>
 	>{};
 
-	for (int i = 0; i < 1; ++i) {
-		m[i] = static_cast<float>(i);
+	for (int i = 0; i < container_size; ++i) {
+		m[i] = factorial(i);
 	}
+
+	for (auto& it : m) {
+		std::cout << it.first << ' ' << it.second << std::endl;
+	}
+
+	for (int i = 0; i < container_size; ++i) {
+		m_custom_allocator[i] = factorial(i);
+	}
+
+	for (auto& it : m_custom_allocator) {
+		std::cout << it.first << ' ' << it.second << std::endl;
+	}
+	return 0;
 }
