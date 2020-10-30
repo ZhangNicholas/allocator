@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "allocatorTraits.hpp"
+#include "allocator_traits.hpp"
 
 int main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);

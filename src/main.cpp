@@ -7,8 +7,10 @@
 
 #include <vector>
 #include <map>
-#include "allocatorTraits.hpp"
-//#include "loggingAllocator.hpp"
+#include "allocator_traits.hpp"
+//#include "logging_allocator.hpp"
+//#include "my_allocator.hpp"
+
 
 unsigned int factorial(unsigned int n)
 {
@@ -20,12 +22,24 @@ unsigned int factorial(unsigned int n)
 int main(int argc, char const* argv[])
 {
 	auto container_size = 10;
+	//std::map<int, int> m;
+	//auto m_custom_allocator = std::map<
+	//	int,
+	//	int,
+	//	std::less<int>,
+	//	logging_allocator<
+	//	std::pair<
+	//	const int, int
+	//	>
+	//	>
+	//>{};
+
 	std::map<int, int> m;
 	auto m_custom_allocator = std::map<
 		int,
 		int,
 		std::less<int>,
-		logging_allocator<
+		Allocator_traits<
 		std::pair<
 		const int, int
 		>
@@ -36,7 +50,7 @@ int main(int argc, char const* argv[])
 		m[i] = factorial(i);
 	}
 
-	for (auto& it : m) {
+	for (const auto& it : m) {
 		std::cout << it.first << ' ' << it.second << std::endl;
 	}
 
@@ -44,7 +58,7 @@ int main(int argc, char const* argv[])
 		m_custom_allocator[i] = factorial(i);
 	}
 
-	for (auto& it : m_custom_allocator) {
+	for (const auto& it : m_custom_allocator) {
 		std::cout << it.first << ' ' << it.second << std::endl;
 	}
 	return 0;
