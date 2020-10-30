@@ -20,7 +20,7 @@ add_executable(myAllocator ${SOURCES})
 # Test target
 add_executable(
 	test_myAllocator
-	test/test_myAllocator.cpp
+	"test/test_my_allocator.cpp"
 )
 
 set_target_properties(myAllocator test_myAllocator PROPERTIES
@@ -87,4 +87,4 @@ include(CPack)
 
 enable_testing()
 
-add_test(test_myAllocator test_myAllocator) 
+add_test(test_myAllocator test_myAllocator)
