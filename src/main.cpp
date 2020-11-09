@@ -13,7 +13,6 @@
 #include "PoolAllocator.h"
 #include "Allocator.h"
 
-
 unsigned int factorial(unsigned int n) {
 	if (n == 0) return 1;
 	return n * factorial(n - 1);
@@ -28,6 +27,7 @@ int main(int argc, char const* argv[])
 	const std::size_t allocationSize = sizeof(std::pair<const int, int>);
 	std::cout << "allocationSize = " << allocationSize << std::endl;
 	Allocator* poolAllocator1 = new PoolAllocator(1024*allocationSize, allocationSize);
+	poolAllocator1->Init();
 
 	std::map<int, int> m;
 	auto m_custom_allocator = std::map<

@@ -10,6 +10,8 @@
 
 #define USE_PRETTY 1
 
+extern PoolAllocator* poolAllocator1;
+
 template<typename T>
 struct Allocator_traits {
 	using value_type = T;
@@ -42,7 +44,7 @@ T* Allocator_traits<T>::allocate(std::size_t n) {
 #else
 	std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
 #endif
-	auto p = std::malloc(n * sizeof(T));
+	auto p = poolAllocator1->Allocate(n * sizeof(T));
 	if (!p)
 		throw std::bad_alloc();
 	return reinterpret_cast<T*>(p);
@@ -55,7 +57,7 @@ void Allocator_traits<T>::deallocate(T* p, std::size_t n) {
 #else
 	std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
 #endif
-	std::free(p);
+	poolAllocator1->Free(reinterpret_cast<void*>(p));
 }
 
 template <class T, class U>
