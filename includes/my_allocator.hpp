@@ -11,64 +11,59 @@
 #define USE_PRETTY 1
 
 template<typename T>
-struct logging_allocator {
+struct Allocator_traits {
 	using value_type = T;
 
-	using pointer = T*;
-	using const_pointer = const T*;
-	using reference = T&;
-	using const_reference = const T&;
+	Allocator_traits();
 
-	template<typename U>
-	struct rebind {
-		using other = logging_allocator<U>;
-	};
+	template <typename U>
+	Allocator_traits(const Allocator_traits<U>&);
 
-	logging_allocator() = default;
-	~logging_allocator() = default;
+	T* allocate(std::size_t n);
 
-	template<typename U>
-	logging_allocator(const logging_allocator<U>&) {
-
-	}
-
-	T* allocate(std::size_t n) {
-#ifndef USE_PRETTY
-		std::cout << "allocate: [n = " << n << "]" << std::endl;
-#else
-		std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
-#endif
-		auto p = std::malloc(n * sizeof(T));
-		if (!p)
-			throw std::bad_alloc();
-		return reinterpret_cast<T*>(p);
-	}
-
-	void deallocate(T* p, std::size_t n) {
-#ifndef USE_PRETTY
-		std::cout << "deallocate: [n  = " << n << "] " << std::endl;
-#else
-		std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
-#endif
-		std::free(p);
-	}
-
-	template<typename U, typename ...Args>
-	void construct(U* p, Args &&...args) {
-#ifndef USE_PRETTY
-		std::cout << "construct" << std::endl;
-#else
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-#endif
-		new(p) U(std::forward<Args>(args)...);
-	};
-
-	void destroy(T* p) {
-#ifndef USE_PRETTY
-		std::cout << "destroy" << std::endl;
-#else
-		std::cout << __PRETTY_FUNCTION__ << std::endl;
-#endif
-		p->~T();
-	}
+	void deallocate(T* p, std::size_t n);
 };
+
+template <typename T>
+Allocator_traits<T>::Allocator_traits() {
+}
+
+template <typename T>
+template <typename U>
+Allocator_traits<T>::Allocator_traits(const Allocator_traits<U>&) {
+	// should we make a copy of the rhs.m_buffer ?
+	// No, we should not!
+}
+
+template <typename T>
+T* Allocator_traits<T>::allocate(std::size_t n) {
+#ifndef USE_PRETTY
+	std::cout << "allocate: [n = " << n << "]" << std::endl;
+#else
+	std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
+#endif
+	auto p = std::malloc(n * sizeof(T));
+	if (!p)
+		throw std::bad_alloc();
+	return reinterpret_cast<T*>(p);
+}
+
+template <typename T>
+void Allocator_traits<T>::deallocate(T* p, std::size_t n) {
+#ifndef USE_PRETTY
+	std::cout << "deallocate: [n  = " << n << "] " << std::endl;
+#else
+	std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
+#endif
+	std::free(p);
+}
+
+template <class T, class U>
+constexpr bool operator== (const Allocator_traits<T>&, const Allocator_traits<U>&) noexcept {
+	return false;
+}
+
+template <class T, class U>
+constexpr bool operator!= (const Allocator_traits<T>&, const Allocator_traits<U>&) noexcept {
+	return true;
+}
