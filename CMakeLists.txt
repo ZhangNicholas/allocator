@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 
 if($ENV{TRAVIS_BUILD_NUMBER})
 	project(myAllocator VERSION 0.0.$ENV{TRAVIS_BUILD_NUMBER})
@@ -9,21 +9,24 @@ endif()
 set(CMAKE_CXX_STANDARD 14)
 
 # Lookup for pre-built gtest
-find_package(GTest REQUIRED)
+#find_package(GTest REQUIRED)
 
 set(SOURCES src/main.cpp
+	src/Allocator.cpp
+	src/PoolAllocator
+	src/Benchmark.cpp
 )
 
 # Main target
 add_executable(myAllocator ${SOURCES})
 
 # Test target
-add_executable(
+#[[add_executable(
 	test_myAllocator
 	"test/test_my_allocator.cpp"
-)
+)]]
 
-set_target_properties(myAllocator test_myAllocator PROPERTIES
+set_target_properties(myAllocator #[[test_myAllocator]] PROPERTIES
 	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED ON
 )
@@ -34,18 +37,18 @@ target_include_directories(
 )
 
 # Add googletest, src to the include directories for the test target
-target_include_directories(
-	test_myAllocator
-	PRIVATE ${GTEST_INCLUDE_DIRS}
-	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
-	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/includes"
-)
+#target_include_directories(
+#	test_myAllocator
+#	PRIVATE ${GTEST_INCLUDE_DIRS}
+#	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
+#	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/includes"
+#)
 
 # Link test target against gtest libraries
-target_link_libraries(
-	test_myAllocator PRIVATE
-	${GTEST_BOTH_LIBRARIES}
-)
+#target_link_libraries(
+#	test_myAllocator PRIVATE
+#	${GTEST_BOTH_LIBRARIES}
+#)
 
 if (MSVC)
 	# @see https://github.com/google/googletest/blob/master/googletest/README.md
@@ -58,19 +61,19 @@ if (MSVC)
 		myAllocator PRIVATE
 		/W4
 	)
-	target_compile_options(
+	#[[target_compile_options(
 		test_myAllocator PRIVATE
 		/W4
-	)
+	)]]
 else ()
 	target_compile_options(
 		myAllocator PRIVATE
 		-Wall -Wextra -pedantic #-Werror
 	)
-	target_compile_options(
+	#[[target_compile_options(
 		test_myAllocator PRIVATE
 		-Wall -Wextra -pedantic #-Werror
-	)
+	)]]
 endif()
 
 install(TARGETS myAllocator RUNTIME DESTINATION bin)
@@ -85,6 +88,6 @@ set(CPACK_PACKAGE_CONTACT cnickol@gmail.com)
 
 include(CPack)
 
-enable_testing()
+#enable_testing()
 
-add_test(test_myAllocator test_myAllocator)
+#add_test(test_myAllocator test_myAllocator)

@@ -2,19 +2,19 @@
 // #include <cstdlib>
 #include <iostream>
 // #include <string>
-// #include <cstddef>?
-// #include <algorithm>
-
+#include <cstddef>?
 #include <vector>
 #include <map>
+
 //#include "allocator_traits.hpp"
 //#include "logging_allocator.hpp"
 #include "my_allocator.hpp"
+#include "Benchmark.h"
+#include "Allocator.h"
 
 
 unsigned int factorial(unsigned int n) {
-	if (n == 0)
-		return 1;
+	if (n == 0) return 1;
 	return n * factorial(n - 1);
 }
 
