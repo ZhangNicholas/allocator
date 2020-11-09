@@ -1,5 +1,5 @@
 ﻿branches:
-  only:
+ only:
   - main
 language: cpp
 before_install:
@@ -28,6 +28,6 @@ deploy:
  provider: script
  skip_cleanup: true
  script:
-  - curl -T myAllocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uzhangnicholas:$BINTRAY_API_KEY "https://api.bintray.com/content/cnickol/Otus_cpp/myAllocator/$TRAVIS_BUILD_NUMBER/myAllocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
+  - curl -T myAllocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -ucnickol:$BINTRAY_API_KEY "https://api.bintray.com/content/cnickol/myAllocator/$TRAVIS_BUILD_NUMBER/myAllocator-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
  on:
   branch: main
