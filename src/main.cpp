@@ -10,6 +10,7 @@
 //#include "logging_allocator.hpp"
 #include "my_allocator.hpp"
 #include "Benchmark.h"
+#include "PoolAllocator.h"
 #include "Allocator.h"
 
 
@@ -21,6 +22,12 @@ unsigned int factorial(unsigned int n) {
 int main(int argc, char const* argv[])
 {
 	auto container_size = 10;
+	Allocator* poolAllocator = new PoolAllocator(16777216, 4096);
+	poolAllocator->Init();
+
+	const std::size_t allocationSize = sizeof(std::pair<const int, int>);
+	std::cout << "allocationSize = " << allocationSize << std::endl;
+	Allocator* poolAllocator1 = new PoolAllocator(1024*allocationSize, allocationSize);
 
 	std::map<int, int> m;
 	auto m_custom_allocator = std::map<

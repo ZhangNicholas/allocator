@@ -41,7 +41,8 @@ T* Allocator_traits<T>::allocate(std::size_t n) {
 #else
 	std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
 #endif
-	auto p = std::malloc(n * sizeof(T));
+	//auto p = std::malloc(n * sizeof(T));
+	auto p = poolAllocator->Allocate(n * sizeof(T));
 	if (!p)
 		throw std::bad_alloc();
 	return reinterpret_cast<T*>(p);
@@ -54,7 +55,8 @@ void Allocator_traits<T>::deallocate(T* p, std::size_t n) {
 #else
 	std::cout << __PRETTY_FUNCTION__ << "[n = " << n << "]" << std::endl;
 #endif
-	std::free(p);
+	//std::free(p);
+	poolAllocator->Free(reinterpret_cast<T*>(p));
 }
 
 template <class T, class U>
