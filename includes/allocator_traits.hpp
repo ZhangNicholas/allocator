@@ -16,14 +16,6 @@ struct Allocator_traits {
 
 	Allocator_traits();
 
-	//template<typename U>
-	//struct rebind {
-	//	using other = logging_allocator<U>;
-	//};
-
-	//Allocator_traits() = default;
-	//~Allocator_traits() = default;
-
 	template <typename U>
 	Allocator_traits(const Allocator_traits<U>&);
 
@@ -39,8 +31,7 @@ Allocator_traits<T>::Allocator_traits() {
 template <typename T>
 template <typename U>
 Allocator_traits<T>::Allocator_traits(const Allocator_traits<U>&) {
-	// should we make a copy of the rhs.m_buffer ?
-	// No, we should not!
+
 }
 
 template <typename T>
@@ -75,24 +66,3 @@ template <class T, class U>
 constexpr bool operator!= (const Allocator_traits<T>&, const Allocator_traits<U>&) noexcept {
 	return false;
 }
-
-
-//	template<typename U, typename ...Args>
-//	void construct(U* p, Args &&...args) {
-//#ifndef USE_PRETTY
-//		std::cout << "construct" << std::endl;
-//#else
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//#endif
-//		new(p) U(std::forward<Args>(args)...);
-//	};
-//
-//	void destroy(T* p) {
-//#ifndef USE_PRETTY
-//		std::cout << "destroy" << std::endl;
-//#else
-//		std::cout << __PRETTY_FUNCTION__ << std::endl;
-//#endif
-//		p->~T();
-//	}
-//};
