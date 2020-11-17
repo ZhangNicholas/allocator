@@ -12,9 +12,6 @@ set(CMAKE_CXX_STANDARD 14)
 #find_package(GTest REQUIRED)
 
 set(SOURCES src/main.cpp
-	src/Allocator.cpp
-	src/PoolAllocator
-	src/Benchmark.cpp
 )
 
 # Main target

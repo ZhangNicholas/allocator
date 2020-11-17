@@ -1,60 +1,39 @@
-// #include <cassert>
-// #include <cstdlib>
-#include <iostream>
-// #include <string>
-#include <cstddef>?
 #include <vector>
+#include <iostream>
 #include <map>
 
-//#include "allocator_traits.hpp"
-//#include "logging_allocator.hpp"
-#include "my_allocator.hpp"
-#include "Benchmark.h"
-#include "PoolAllocator.h"
-#include "Allocator.h"
+#include "arena_allocator.h"
+
+template <class T, std::size_t N> using A = arena_allocator<T, N>;
+template <class T, std::size_t N> using Vector = std::vector<T, arena_allocator<T, N>>;
+template <class Key, class T, std::size_t N> using Map =
+std::map <
+	Key,
+	T,
+	std::less<Key>,
+	arena_allocator<std::pair<const Key, T>, N>
+>;
 
 unsigned int factorial(unsigned int n) {
 	if (n == 0) return 1;
 	return n * factorial(n - 1);
 }
 
-int main(int argc, char const* argv[])
-{
-	auto container_size = 10;
-	Allocator* poolAllocator = new PoolAllocator(16777216, 4096);
-	poolAllocator->Init();
-
-	const std::size_t allocationSize = sizeof(std::pair<const int, int>);
-	std::cout << "allocationSize = " << allocationSize << std::endl;
-	Allocator* poolAllocator1 = new PoolAllocator(1024*allocationSize, allocationSize);
-	poolAllocator1->Init();
+int main() {
+	constexpr int container_size = 10;
+	constexpr std::size_t arena_size = 1024;
+	arena<arena_size> a;
 
 	std::map<int, int> m;
-	auto m_custom_allocator = std::map<
-		int,
-		int,
-		std::less<int>,
-		Allocator_traits<
-		std::pair<
-		const int, int
-		>
-		>
-	>{};
-
-	for (int i = 0; i < container_size; ++i) {
-		m[i] = factorial(i);
-	}
-
-	for (const auto& it : m) {
-		std::cout << it.first << ' ' << it.second << std::endl;
-	}
+	Map<int, int, arena_size> m_custom_allocator{
+		A<std::map<int, int>, arena_size>(a) };
 
 	for (int i = 0; i < container_size; ++i) {
 		m_custom_allocator[i] = factorial(i);
+		std::cout << sizeof(m_custom_allocator[i]) << std::endl;
 	}
 
 	for (const auto& it : m_custom_allocator) {
 		std::cout << it.first << ' ' << it.second << std::endl;
 	}
-	return 0;
 }
