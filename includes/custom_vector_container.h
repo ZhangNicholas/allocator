@@ -42,7 +42,6 @@ struct CustomVector {
 	std::vector<T, Allocator> vec_;
 
 	CustomVector() {
-		std::vector<T, std::allocator<T>> vec_;
 	};
 
 	CustomVector(Allocator al) : vec_{ al } {
