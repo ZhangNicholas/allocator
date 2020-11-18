@@ -1,2 +1,1 @@
-# otus_cpp
-Otus homework 2
+# simple arena allocator and custom container implementation
