@@ -10,11 +10,11 @@ template <
 
 struct It {
 	std::vector<T, A>& vec_;
-	int pointer_;
+	std::size_t pointer_;
 
 	It(std::vector<T, A>& vec) : vec_{ vec }, pointer_{ 0 } {}
 
-	It(std::vector<T, A>& vec, int size) : vec_{ vec }, pointer_{ size } {}
+	It(std::vector<T, A>& vec, std::size_t size) : vec_{ vec }, pointer_{ size } {}
 
 	bool operator!=(const It<T, A>& other) const {
 		return !(*this == other);
@@ -42,7 +42,6 @@ struct CustomVector {
 	std::vector<T, Allocator> vec_;
 
 	CustomVector() {
-		std::vector<T, std::allocator<T>> vec_;
 	};
 
 	CustomVector(Allocator al) : vec_{ al } {
