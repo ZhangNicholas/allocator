@@ -1,65 +1,70 @@
-// #include <cassert>
-// #include <cstdlib>
-#include <iostream>
-// #include <string>
-// #include <cstddef>?
-// #include <algorithm>
-
 #include <vector>
+#include <iostream>
 #include <map>
-#include "allocator_traits.hpp"
-//#include "logging_allocator.hpp"
-//#include "my_allocator.hpp"
 
+#include "arena_allocator.h"
+#include "custom_vector_container.h"
 
-unsigned int factorial(unsigned int n)
-{
-	if (n == 0)
-		return 1;
+template <class T, std::size_t N> using CA = arena_allocator<T, N>; // custom allocator
+template <class T, std::size_t N> using CACustomVector = // custom vector with custom allocator
+CustomVector<T, arena_allocator<T, N>>;
+template <class Key, class T, std::size_t N> using CAMap = // map with custom allocator
+std::map <
+	Key,
+	T,
+	std::less<Key>,
+	arena_allocator<std::pair<const Key, T>, N>
+>;
+
+unsigned int factorial(unsigned int n) {
+	if (n == 0) return 1;
 	return n * factorial(n - 1);
 }
 
-int main(int argc, char const* argv[])
-{
-	auto container_size = 10;
-	//std::map<int, int> m;
-	//auto m_custom_allocator = std::map<
-	//	int,
-	//	int,
-	//	std::less<int>,
-	//	logging_allocator<
-	//	std::pair<
-	//	const int, int
-	//	>
-	//	>
-	//>{};
+int main() {
+	constexpr int container_size = 10;
+	constexpr std::size_t arena_size = 1024; // bytes
+	arena<arena_size> a;
 
 	std::map<int, int> m;
-	auto m_custom_allocator = std::map<
-		int,
-		int,
-		std::less<int>,
-		Allocator_traits<
-		std::pair<
-		const int, int
-		>
-		>
-	>{};
+	CAMap<int, int, arena_size> ca_m{
+		CA<std::map<int, int>, arena_size>(a)
+	};
 
+	CustomVector<int, std::allocator<int>> vec;
+	CACustomVector<int, arena_size> ca_vec{
+		CA<std::vector<int>, arena_size>(a)
+	};
+
+	std::cout << "map with std::allocator" << std::endl;
 	for (int i = 0; i < container_size; ++i) {
 		m[i] = factorial(i);
 	}
-
 	for (const auto& it : m) {
 		std::cout << it.first << ' ' << it.second << std::endl;
 	}
 
+	std::cout << "map with custom allocator" << std::endl;
 	for (int i = 0; i < container_size; ++i) {
-		m_custom_allocator[i] = factorial(i);
+		ca_m[i] = factorial(i);
 	}
-
-	for (const auto& it : m_custom_allocator) {
+	for (const auto& it : ca_m) {
 		std::cout << it.first << ' ' << it.second << std::endl;
 	}
-	return 0;
+
+	std::cout << "custom vector with std::allocator" << std::endl;
+	for (int i = 0; i < container_size; ++i) {
+		vec.push_back(i);
+	}
+	for (It<int> it = vec.begin(); it != vec.end(); ++it) {
+		std::cout << *it << std::endl;
+	}
+
+	std::cout << "custom vector with custom allocator" << std::endl;
+	for (int i = 0; i < container_size; ++i) {
+		ca_vec.push_back(i);
+	}
+	for (It<int, arena_allocator<int, arena_size>> it = ca_vec.begin(); it != ca_vec.end(); ++it) {
+		std::cout << *it << std::endl;
+	}
 }
