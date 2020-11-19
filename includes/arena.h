@@ -9,7 +9,7 @@ class arena
 	char* ptr_;
 
 	std::size_t align_up(std::size_t n) {
-		return n + (alignment - 1)) & ~(alignment - 1);
+		return (n + (alignment - 1)) & ~(alignment - 1);
 	}
 
 public:
