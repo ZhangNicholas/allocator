@@ -20,7 +20,6 @@ public:
 	template <class U>
 	arena_allocator(const arena_allocator<U, N>& a)
 		: a_(a.a_) {
-		//std::cout << "constructor value x_ = " << x_ << std::endl;
 	}
 	arena_allocator(const arena_allocator&) = default;
 	arena_allocator& operator=(const arena_allocator&) = delete;
