@@ -20,18 +20,15 @@ public:
 	template <class U>
 	arena_allocator(const arena_allocator<U, N>& a)
 		: a_(a.a_) {
-		//std::cout << "constructor value x_ = " << x_ << std::endl;
 	}
 	arena_allocator(const arena_allocator&) = default;
 	arena_allocator& operator=(const arena_allocator&) = delete;
 
 	T* allocate(std::size_t n) {
-		//std::cout << "x_ = " << x_ << std::endl;
 		return reinterpret_cast<T*>(a_.allocate(n * sizeof(T)));
 	}
 
-	void deallocate(T* p, std::size_t n)
-	{
+	void deallocate(T* p, std::size_t n) {
 		a_.deallocate(reinterpret_cast<char*>(p), n * sizeof(T));
 	}
 
@@ -41,18 +38,25 @@ public:
 		operator==(const arena_allocator<T1, N1>& x, const arena_allocator<U, M>& y);
 
 	template <class U, std::size_t M> friend class arena_allocator;
+
+	template<typename U, typename ...Args>
+	void construct(U* p, Args &&...args) {
+		new(p) U(std::forward<Args>(args)...);
+	};
+
+	void destroy(T* p) {
+		p->~T();
+	}
 };
 
 template <class T, std::size_t N, class U, std::size_t M>
 bool
-operator==(const arena_allocator<T, N>& x, const arena_allocator<U, M>& y)
-{
+operator==(const arena_allocator<T, N>& x, const arena_allocator<U, M>& y) {
 	return N == M && &x.a_ == &y.a_;
 }
 
 template <class T, std::size_t N, class U, std::size_t M>
 bool
-operator!=(const arena_allocator<T, N>& x, const arena_allocator<U, M>& y)
-{
+operator!=(const arena_allocator<T, N>& x, const arena_allocator<U, M>& y) {
 	return !(x == y);
 }

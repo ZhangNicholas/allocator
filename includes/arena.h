@@ -30,7 +30,7 @@ public:
 			return r;
 		}
 		std::cout << "New block of " << n << " was allocated" << std::endl;
-		return static_cast<char*>(::operator new(n));
+		return reinterpret_cast<char*>(::operator new(n));
 	}
 	
 	void deallocate(char* p, std::size_t n)
@@ -43,7 +43,7 @@ public:
 			}
 		}
 		else {
-			std::cout << "Deallocation in the current block" << std::endl;
+			std::cout << "Deallocation outside of original arena" << std::endl;
 			::operator delete(p);
 		}
 	}
